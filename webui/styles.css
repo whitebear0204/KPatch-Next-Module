@@ -1,0 +1,68 @@
+@import "./theme.css";
+
+body {
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    padding-top: var(--top-inset);
+    padding-bottom: var(--bottom-inset);
+    margin: 0;
+    font-size: 16px;
+}
+
+.root_layout {
+    width: 100%;
+    max-width: 768px;
+    min-height: calc(100vh - var(--top-inset) - var(--bottom-inset));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.top-bar {
+    width: 100vw;
+    position: fixed;
+    padding-top: var(--top-inset);
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background-color: var(--md-sys-color-surface);
+}
+
+.top-bar-content {
+    font-size: 1.4em;
+    height: 64px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.title {
+    flex-grow: 1;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.content {
+    width: 100%;
+    max-width: calc(100vw - 32px);
+    margin-top: 64px;
+    padding-top: 16px;
+    padding-bottom: calc(var(--bottom-inset) + 16px + 64px);
+}
+
+[slot="headline"] {
+    user-select: none;
+}
+
+[unresolved] {
+    opacity: 0;
+    overflow: hidden;
+}
+
+[hidden] {
+    display: none;
+}
