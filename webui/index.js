@@ -44,6 +44,7 @@ function updateSuperkey(key) {
         field.value = key;
     });
     localStorage.setItem('kp-next_superkey', key);
+    exec(`[ -n "${key}" ] && echo "${key}" | base64 -w0 > /data/adb/kp-next/key || rm -f /data/adb/kp-next/key`);
 }
 
 function updateBtnState(value) {
