@@ -30,15 +30,25 @@ body {
 }
 
 .splash-icon {
+    --icon-bg: var(--md-sys-color-primary);
+    --icon-fill: var(--md-sys-color-surface-container);
+
     border-radius: 50%;
-    background-color: white;
+    background-color: var(--icon-bg);
     transition: opacity 0.05s ease;
     opacity: 0;
 
     svg {
         width: min(45vw, 240px);
         height: auto;
-        fill: black;
+        fill: var(--icon-fill);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .splash-icon {
+        --icon-bg: var(--md-sys-color-primary);
+        --icon-fill: var(--md-sys-color-surface-container);
     }
 }
 
