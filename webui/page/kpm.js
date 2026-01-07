@@ -5,7 +5,7 @@ let allKpms = [];
 let searchQuery = '';
 
 async function getKpmInfo(path) {
-    const result = await exec(`kptools -l -M ${path}`, { env: { PATH: `${modDir}/bin` } });
+    const result = await exec(`kptools -l -M "${path}"`, { env: { PATH: `${modDir}/bin` } });
     if (import.meta.env.DEV) { // vite debug
         result.stdout = 'name=Test Module\nversion=1.0.0\ndescription=This is a test module\nauthor=KOWX712\nlicense=MIT\nargs=test';
     }
