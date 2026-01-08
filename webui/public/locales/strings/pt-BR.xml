@@ -34,7 +34,7 @@
     <string name="label_trigger_event">Acionar evento</string>
     <!-- Status -->
     <string name="status_not_installed">Não instalado</string>
-    <string name="status_working">Em operação</string>
+    <string name="status_working">Em operação 😋</string>
     <string name="status_not_installed_or_authenticated">Não instalado ou não autenticado</string>
     <string name="status_authentication_failed">Falha de autenticação</string>
     <string name="status_authentication_failed_desc">A SuperKey não pôde ser autenticada; o KPatch Next não pode operar corretamente. Tente novamente.</string>

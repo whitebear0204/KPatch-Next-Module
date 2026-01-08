@@ -39,7 +39,7 @@
     <string name="label_trigger_event">トリガーイベント</string>
     <!-- Status -->
     <string name="status_not_installed">未インストール</string>
-    <string name="status_working">動作中</string>
+    <string name="status_working">動作中 😋</string>
     <string name="status_not_installed_or_authenticated">未インストールまたは未認証</string>
     <string name="status_authentication_failed">認証に失敗しました</string>
     <string name="status_authentication_failed_desc">SuperKey を認証できないため、KPatch Next は正常に動作しません。もう一度お試しください。</string>

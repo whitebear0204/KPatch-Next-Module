@@ -33,7 +33,7 @@
     <string name="label_trigger_event">Event Pemicu</string>
     <!-- Status -->
     <string name="status_not_installed">Tidak terinstal</string>
-    <string name="status_working">Berjalan</string>
+    <string name="status_working">Berjalan 😋</string>
     <string name="status_not_installed_or_authenticated">Tidak terinstal atau terautentikasi</string>
     <string name="status_authentication_failed">Autentikasi gagal</string>
     <string name="status_authentication_failed_desc">Gagal mengautentikasi SuperKey, sehingga KPatch Next tidak dapat bekerja dengan baik. Silakan coba lagi.</string>

@@ -40,7 +40,7 @@
     <string name="label_trigger_event">触发事件</string>
     <!-- Status -->
     <string name="status_not_installed">未安装</string>
-    <string name="status_working">运行中</string>
+    <string name="status_working">工作中 😋</string>
     <string name="status_not_installed_or_authenticated">未安装或未认证</string>
     <string name="status_authentication_failed">认证失败</string>
     <string name="status_authentication_failed_desc">无法认证超级密钥，因此 KPatch Next 无法正常工作。请重试。</string>

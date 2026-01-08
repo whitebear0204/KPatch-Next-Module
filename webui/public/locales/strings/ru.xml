@@ -36,7 +36,7 @@
     <string name="label_trigger_event">Событие-триггер</string>
     <!-- Status -->
     <string name="status_not_installed">Не установлено</string>
-    <string name="status_working">Работает</string>
+    <string name="status_working">Работает 😋</string>
     <string name="status_not_installed_or_authenticated">Не установлено или не авторизовано</string>
     <string name="status_authentication_failed">Ошибка аутентификации</string>
     <string name="status_authentication_failed_desc">Не удалось аутентифицировать SuperKey, поэтому KPatch Next не может работать корректно. Пожалуйста, попробуйте снова.</string>
