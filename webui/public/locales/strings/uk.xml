@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- UI Labels -->
-    <string name="title_patch">Patch</string>
-    <string name="title_unpatch">UnPatch</string>
-    <string name="title_kpmodule">KPModule</string>
     <string name="title_exclude">Виключити</string>
     <string name="title_settings">Налаштування</string>
     <string name="title_home">Головна</string>
@@ -86,5 +83,6 @@
     <string name="msg_failed_get_module_info">Не вдалося отримати інформацію про модуль</string>
     <string name="msg_error_loading_apps">Помилка завантаження програм: </string>
     <string name="msg_error_rendering_apps">Помилка рендерингу програм: </string>
+    <string name="msg_invalid_char">Superkey містить спеціальні символи: $ " ' [ ] `</string>
     <string name="msg_unknown">Невідомо</string>
 </resources>

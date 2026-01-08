@@ -61,8 +61,14 @@ function updateSuperkey(key) {
 }
 
 function updateBtnState(value) {
+    const isInvalid = /[$"'[\]`]/.test(value);
+    const field = document.querySelector('#superkey .password-field');
+
+    field.error = isInvalid;
+    field.errorText = isInvalid ? getString('msg_invalid_char') : '';
+
     document.querySelector('#superkey-dialog .confirm').disabled = !value;
-    document.getElementById('start').disabled = !value;
+    document.getElementById('start').disabled = !value || isInvalid;
 }
 
 export async function initInfo() {
