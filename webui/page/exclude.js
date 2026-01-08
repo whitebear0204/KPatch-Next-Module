@@ -39,6 +39,7 @@ async function refreshAppList() {
         if (import.meta.env.DEV) { // vite debug
             allApps = [
                 { appLabel: 'Chrome', packageName: 'com.android.chrome', isSystem: false, uid: 10001 },
+                { appLabel: 'Chrome', packageName: 'com.android.chrome', isSystem: false, uid: 1010001 },
                 { appLabel: 'Google', packageName: 'com.google.android.googlequicksearchbox', isSystem: true, uid: 1010002 },
                 { appLabel: 'Settings', packageName: 'com.android.settings', isSystem: true, uid: 10003 },
                 { appLabel: 'WhatsApp', packageName: 'com.whatsapp', isSystem: false, uid: 10123 },
@@ -60,7 +61,16 @@ const appItemMap = new Map();
 
 async function saveExcludedList(excludedApps) {
     const header = 'pkg,exclude,allow,uid';
-    const lines = excludedApps.map(app => `${app.packageName},1,0,${app.uid % 100000}`);
+    const seen = new Set();
+    const uniqueList = [];
+    excludedApps.forEach(app => {
+        const key = `${app.packageName}:${app.uid % 100000}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            uniqueList.push(app);
+        }
+    });
+    const lines = uniqueList.map(app => `${app.packageName},1,0,${app.uid % 100000}`);
     const csvContent = [header, ...lines].join('\n');
     if (import.meta.env.DEV) {
         localStorage.setItem('kp-next_excluded_mock', csvContent);
@@ -105,18 +115,26 @@ async function renderAppList() {
 
             // Consistency check
             if (allApps.length > 0) {
-                const currentAppsMap = new Map(allApps.map(app => [(app.packageName || '').trim(), app]));
+                const appByRealUid = new Map();
+                allApps.forEach(app => {
+                    const rUid = app.uid % 100000;
+                    const key = `${(app.packageName || '').trim()}:${rUid}`;
+                    if (!appByRealUid.has(key)) appByRealUid.set(key, []);
+                    appByRealUid.get(key).push(app);
+                });
 
+                excludedApps = [];
                 let changed = false;
-                excludedApps = list.map(item => {
-                    const app = currentAppsMap.get(item.packageName);
-                    if (!app) return item;
-                    const realUid = app.uid % 100000;
-                    if (realUid !== item.uid) {
-                        changed = true;
-                        return { packageName: item.packageName, uid: realUid };
+                list.forEach(item => {
+                    const key = `${item.packageName}:${item.uid}`;
+                    const matches = appByRealUid.get(key);
+                    if (matches) {
+                        matches.forEach(app => {
+                            excludedApps.push({ packageName: app.packageName, uid: app.uid });
+                        });
+                    } else {
+                        excludedApps.push({ packageName: item.packageName, uid: item.uid });
                     }
-                    return item;
                 });
 
                 if (changed) {
@@ -127,11 +145,11 @@ async function renderAppList() {
             }
         }
 
-        const excludedPkgNames = new Set(excludedApps.map(app => app.packageName));
+        const excludedAppKeys = new Set(excludedApps.map(app => `${app.packageName}:${app.uid}`));
 
         const sortedApps = [...allApps].sort((a, b) => {
-            const aExcluded = excludedPkgNames.has(a.packageName);
-            const bExcluded = excludedPkgNames.has(b.packageName);
+            const aExcluded = excludedAppKeys.has(`${a.packageName}:${a.uid}`);
+            const bExcluded = excludedAppKeys.has(`${b.packageName}:${b.uid}`);
             if (aExcluded !== bExcluded) return aExcluded ? -1 : 1;
             return (a.appLabel || '').localeCompare(b.appLabel || '');
         });
@@ -139,7 +157,8 @@ async function renderAppList() {
         emptyMsg.classList.add('hidden');
 
         sortedApps.forEach(app => {
-            let item = appItemMap.get(app.packageName);
+            const appKey = `${app.packageName}:${app.uid}`;
+            let item = appItemMap.get(appKey);
             if (!item) {
                 item = document.createElement('label');
                 item.className = 'app-item';
@@ -171,27 +190,43 @@ async function renderAppList() {
                 let saveTimeout = null;
                 toggle.addEventListener('change', () => {
                     const realUid = app.uid % 100000;
-                    if (toggle.selected) {
-                        if (!excludedApps.some(e => e.packageName === app.packageName)) {
-                            excludedApps.push({ packageName: app.packageName, uid: realUid });
+                    const isSelected = toggle.selected;
+
+                    // Sync state across all instances of the same app
+                    allApps.forEach(a => {
+                        if (a.packageName === app.packageName && (a.uid % 100000) === realUid) {
+                            if (isSelected) {
+                                if (!excludedApps.some(e => e.packageName === a.packageName && e.uid === a.uid)) {
+                                    excludedApps.push({ packageName: a.packageName, uid: a.uid });
+                                }
+                            } else {
+                                excludedApps = excludedApps.filter(e => !(e.packageName === a.packageName && e.uid === a.uid));
+                            }
+
+                            const otherItem = appItemMap.get(`${a.packageName}:${a.uid}`);
+                            if (otherItem) {
+                                const otherToggle = otherItem.querySelector('md-switch');
+                                if (otherToggle && otherToggle !== toggle) {
+                                    otherToggle.selected = isSelected;
+                                }
+                            }
                         }
-                    } else {
-                        excludedApps = excludedApps.filter(e => e.packageName !== app.packageName);
-                    }
+                    });
+
                     if (saveTimeout) clearTimeout(saveTimeout);
                     saveTimeout = setTimeout(() => {
                         saveExcludedList(excludedApps);
                     }, 500);
-                    exec(`kpatch ${superkey} exclude_set ${realUid} ${toggle.selected ? 1 : 0}`, { env: { PATH: `${modDir}/bin` } });
+                    exec(`kpatch ${superkey} exclude_set ${realUid} ${isSelected ? 1 : 0}`, { env: { PATH: `${modDir}/bin` } });
                 });
 
-                appItemMap.set(app.packageName, item);
+                appItemMap.set(appKey, item);
                 iconObserver.observe(item);
             }
 
             // Update state
             const toggle = item.querySelector('md-switch');
-            toggle.selected = excludedPkgNames.has(app.packageName);
+            toggle.selected = excludedAppKeys.has(`${app.packageName}:${app.uid}`);
 
             appList.appendChild(item);
         });
@@ -208,7 +243,7 @@ function applyFilters() {
     let visibleCount = 0;
 
     allApps.forEach(app => {
-        const item = appItemMap.get(app.packageName);
+        const item = appItemMap.get(`${app.packageName}:${app.uid}`);
         if (!item) return;
 
         const matchesSearch = (app.appLabel || '').toLowerCase().includes(query) ||
