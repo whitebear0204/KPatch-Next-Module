@@ -15,7 +15,6 @@
     <string name="title_reboot_bootloader">Redémarrer vers le Bootloader</string>
     <string name="title_reboot_download">Redémarrer en mode Téléchargement</string>
     <string name="title_reboot_edl">Redémarrer en mode EDL</string>
-    <string name="title_kernel">Kernel</string>
     <string name="title_rehook_mode">Mode Rehook</string>
     <!-- Buttons -->
     <string name="button_install">Appuyez pour installer</string>
@@ -24,7 +23,6 @@
     <string name="button_start">Démarrer</string>
     <string name="button_unpatch">Dépatcher</string>
     <string name="button_cancel">Annuler</string>
-    <string name="button_ok">OK</string>
     <string name="button_load">Charger</string>
     <string name="button_unload">Décharger</string>
     <string name="button_refresh">Recharger</string>
