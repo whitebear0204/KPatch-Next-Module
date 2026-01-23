@@ -45,9 +45,16 @@ magiskboot unpack "$BOOTIMAGE" >/dev/null 2>&1
   fi
 fi
 
-if [ ! $(kptools -i kernel -f | grep CONFIG_KALLSYMS=y) ]; then
+if kptools -i kernel -f | grep -q "CONFIG_KPM=y"; then
 	echo "! Patcher has Aborted."
-	echo "! APatch requires CONFIG_KALLSYMS to be Enabled."
+	echo "! Detected built-in KPM (CONFIG_KPM=y)."
+	echo "! KPatch-Next is not compatible alongside built-in KPM."
+	exit 1
+fi
+
+if [ ! $(kptools -i kernel -f | grep CONFIG_KALLSYMS_ALL=y) ]; then
+	echo "! Patcher has Aborted."
+	echo "! KPatch-Next requires CONFIG_KALLSYMS_ALL to be Enabled."
 	echo "! But your kernel seems NOT enabled it."
 	exit 1
 fi
@@ -73,12 +80,6 @@ fi
 
 echo "- Repacking boot image"
 magiskboot repack "$BOOTIMAGE" >/dev/null 2>&1
-
-if [ ! $(kptools -i kernel.ori -f | grep CONFIG_KALLSYMS_ALL=y) ]; then
-	echo "! Detected CONFIG_KALLSYMS_ALL is not set!"
-	echo "! APatch has patched but maybe your device won't boot."
-	echo "! Make sure you have original boot image backup."
-fi
 
 if [ $? -ne 0 ]; then
   >&2 echo "! Repack error: $?"
